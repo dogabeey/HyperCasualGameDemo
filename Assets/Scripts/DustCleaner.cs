@@ -8,11 +8,10 @@ public class DustCleaner : MonoBehaviour
     [Range(1,50)]public int brushSize = 40;
     public string textureName;
     public float zoomSensitivity = 30;
+    public GameObject dust;
 
     Material material;
-    Texture3D dustTexture;
     Vector2 prevTouchDiff = Vector2.zero;
-    Vector2 currentTouchDiff;
 
     // Start is called before the first frame update
     void Start()
@@ -25,27 +24,31 @@ public class DustCleaner : MonoBehaviour
     {
         Texture2D tex;
         RaycastHit hit;
-
         if (Input.touches.Length == 1)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
             if (Physics.Raycast(ray, out hit, 1000.0f, 1024))
             {
-                tex = (Texture2D) material.GetTexture(textureName);
+                tex = (Texture2D)material.GetTexture(textureName);
 
+                Vector3 colPoint = hit.point;
                 Vector2 pixels = hit.textureCoord;
+
                 pixels.x *= tex.width;
                 pixels.y *= tex.height;
-                SetPixelGroup(tex, (int)pixels.x, (int)pixels.y, new Color(-1.0f, -1.0f, -1.0f, 1.0f), brushSize);
+                int cleanedColorCount = SetPixelGroup(tex, (int)pixels.x, (int)pixels.y, new Color(-1.0f, -1.0f, -1.0f, 1.0f), brushSize);
+                Instantiate(dust, colPoint, Quaternion.identity);
+                ParticleSystem.MainModule p = dust.GetComponent<ParticleSystem>().main;
+                p.maxParticles = cleanedColorCount;
                 tex.Apply();
                 material.SetTexture(textureName, tex);
-                
+
             }
         }
         if (Input.touches.Length == 2)
         {
             Vector2 delta0, delta1;
-            Vector2 avgInput = ((delta0 = Input.GetTouch(0).deltaPosition) + ( delta1 = Input.GetTouch(1).deltaPosition)) / 2;
+            Vector2 avgInput = ((delta0 = Input.GetTouch(0).deltaPosition) + (delta1 = Input.GetTouch(1).deltaPosition)) / 2;
             Touch touchZero = Input.GetTouch(0);
             Touch touchOne = Input.GetTouch(1);
 
@@ -70,14 +73,19 @@ public class DustCleaner : MonoBehaviour
         }
     }
 
-    void SetPixelGroup(Texture2D texture, int x, int y, Color color, int brushSize)
+    int SetPixelGroup(Texture2D texture, int x, int y, Color color, int brushSize)
     {
+        int changedPixels = 0;
         for(int i = x - brushSize; i < x + brushSize;i++)
         {
             for (int j = y - brushSize; j < y + brushSize; j++)
             {
-                texture.SetPixel(i, j, texture.GetPixel(i,j) - color);
+                Color c;
+                c = texture.GetPixel(i, j);
+                if (c.a != 0.0f) changedPixels++;
+                texture.SetPixel(i, j, c - color);
             }
         }
+        return changedPixels;
     }
 }

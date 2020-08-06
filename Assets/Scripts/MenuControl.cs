@@ -21,4 +21,9 @@ public class MenuControl : MonoBehaviour
     {
         SceneManager.LoadScene(scene);
     }
+
+    public void ResetScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
 }
