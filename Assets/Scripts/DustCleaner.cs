@@ -1,23 +1,29 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class DustCleaner : MonoBehaviour
 {
     public GameObject dustyObject;
     [Range(1,50)]public int brushSize = 40;
+    [Range(1,10)]public int smoothness = 1;
     public string textureName;
     public float zoomSensitivity = 30;
     public GameObject dust;
     public float battery = 100;
+    public float costPerVacuum = 0.1f;
 
     Material material;
     Vector2 prevTouchDiff = Vector2.zero;
+    Texture2D originalTex;
 
     // Start is called before the first frame update
     void Start()
     {
         material = dustyObject.GetComponent<Renderer>().material;
+        originalTex = (Texture2D) Instantiate(material.GetTexture(textureName));
+        
     }
 
     // Update is called once per frame
@@ -27,7 +33,7 @@ public class DustCleaner : MonoBehaviour
         RaycastHit hit;
         if (Input.touches.Length == 1)
         {
-            battery -= 0.1f;
+            ChangeBattery(-costPerVacuum);
             Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
             if (Physics.Raycast(ray, out hit, 1000.0f, 1024))
             {
@@ -38,7 +44,7 @@ public class DustCleaner : MonoBehaviour
 
                 pixels.x *= tex.width;
                 pixels.y *= tex.height;
-                int cleanedColorCount = SetPixelGroup(tex, (int)pixels.x, (int)pixels.y, new Color(-1.0f, -1.0f, -1.0f, 1.0f), brushSize);
+                int cleanedColorCount = AddPixelGroup(tex, (int)pixels.x, (int)pixels.y, new Color(-1.0f, -1.0f, -1.0f, 1.0f), brushSize);
                 Instantiate(dust, colPoint, Quaternion.identity);
                 ParticleSystem.MainModule p = dust.GetComponent<ParticleSystem>().main;
                 p.maxParticles = cleanedColorCount;
@@ -75,7 +81,12 @@ public class DustCleaner : MonoBehaviour
         }
     }
 
-    int SetPixelGroup(Texture2D texture, int x, int y, Color color, int brushSize)
+    private void ChangeBattery(float amount)
+    {
+        battery = battery + amount;
+    }
+
+    int AddPixelGroup(Texture2D texture, int x, int y, Color color, int brushSize)
     {
         int changedPixels = 0;
         for(int i = x - brushSize; i < x + brushSize;i++)
@@ -85,6 +96,7 @@ public class DustCleaner : MonoBehaviour
                 Color c;
                 c = texture.GetPixel(i, j);
                 if (c.a != 0.0f) changedPixels++;
+                if (Mathf.Pow(x-i,2)+ Mathf.Pow(y - j, 2) < Mathf.Pow(brushSize, 2))
                 texture.SetPixel(i, j, c - color);
             }
         }
