@@ -9,6 +9,7 @@ public class DustCleaner : MonoBehaviour
     public string textureName;
     public float zoomSensitivity = 30;
     public GameObject dust;
+    public float battery = 100;
 
     Material material;
     Vector2 prevTouchDiff = Vector2.zero;
@@ -26,6 +27,7 @@ public class DustCleaner : MonoBehaviour
         RaycastHit hit;
         if (Input.touches.Length == 1)
         {
+            battery -= 0.1f;
             Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
             if (Physics.Raycast(ray, out hit, 1000.0f, 1024))
             {
