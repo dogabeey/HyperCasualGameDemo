@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEditor;
 
 public class DustCleaner : MonoBehaviour
@@ -13,23 +14,27 @@ public class DustCleaner : MonoBehaviour
     public GameObject dust;
     public float battery = 100;
     public float costPerVacuum = 0.1f;
+    Texture2D tex;
 
     Material material;
     Vector2 prevTouchDiff = Vector2.zero;
-    Texture2D originalTex;
+    public Texture2D originalTex;
+    float originalTexPixel;
+
+    int totalChangedPixels;
 
     // Start is called before the first frame update
     void Start()
     {
         material = dustyObject.GetComponent<Renderer>().material;
-        originalTex = (Texture2D) Instantiate(material.GetTexture(textureName));
+        originalTex = (Texture2D) material.GetTexture(textureName);
+        originalTexPixel = originalTex.GetPixels().Length;
         
     }
 
     // Update is called once per frame
     void Update()
     {
-        Texture2D tex;
         RaycastHit hit;
         if (Input.touches.Length == 1)
         {
@@ -37,20 +42,22 @@ public class DustCleaner : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
             if (Physics.Raycast(ray, out hit, 1000.0f, 1024))
             {
-                tex = (Texture2D)material.GetTexture(textureName);
-
+                tex = new Texture2D(originalTex.width,originalTex.height,originalTex.format, false);
+                tex.SetPixels(originalTex.GetPixels());
                 Vector3 colPoint = hit.point;
                 Vector2 pixels = hit.textureCoord;
 
                 pixels.x *= tex.width;
                 pixels.y *= tex.height;
                 int cleanedColorCount = AddPixelGroup(tex, (int)pixels.x, (int)pixels.y, new Color(-1.0f, -1.0f, -1.0f, 1.0f), brushSize);
+
                 Instantiate(dust, colPoint, Quaternion.identity);
                 ParticleSystem.MainModule p = dust.GetComponent<ParticleSystem>().main;
                 p.maxParticles = cleanedColorCount;
+
                 tex.Apply();
                 material.SetTexture(textureName, tex);
-
+                originalTex = tex;
             }
         }
         if (Input.touches.Length == 2)
@@ -70,7 +77,6 @@ public class DustCleaner : MonoBehaviour
 
             // Find the difference in the distances between each frame.
             float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
-            Debug.Log(deltaMagnitudeDiff);
 
             if (deltaMagnitudeDiff > 2 || deltaMagnitudeDiff < -2) Camera.main.fieldOfView += (deltaMagnitudeDiff / zoomSensitivity);
             else
@@ -95,11 +101,28 @@ public class DustCleaner : MonoBehaviour
             {
                 Color c;
                 c = texture.GetPixel(i, j);
-                if (c.a != 0.0f) changedPixels++;
+                if (c.a != 0.0f)
+                {
+                    changedPixels++;
+                    totalChangedPixels++;
+                }
                 if (Mathf.Pow(x-i,2)+ Mathf.Pow(y - j, 2) < Mathf.Pow(brushSize, 2))
                 texture.SetPixel(i, j, c - color);
             }
         }
         return changedPixels;
+    }
+
+    public float GetCompletionRate()
+    {
+        return totalChangedPixels / originalTexPixel;
+    }
+    public float GetTextureSize()
+    {
+        return originalTexPixel;
+    }
+    public float GetCleanedPixels()
+    {
+        return totalChangedPixels;
     }
 }
