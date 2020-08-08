@@ -29,7 +29,9 @@ public class DustCleaner : MonoBehaviour
         material = dustyObject.GetComponent<Renderer>().material;
         originalTex = (Texture2D) material.GetTexture(textureName);
         originalTexPixel = originalTex.GetPixels().Length;
-        
+        tex = new Texture2D(originalTex.width, originalTex.height, originalTex.format, false);
+        tex.SetPixels(originalTex.GetPixels());
+
     }
 
     // Update is called once per frame
@@ -42,8 +44,6 @@ public class DustCleaner : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
             if (Physics.Raycast(ray, out hit, 1000.0f, 1024))
             {
-                tex = new Texture2D(originalTex.width,originalTex.height,originalTex.format, false);
-                tex.SetPixels(originalTex.GetPixels());
                 Vector3 colPoint = hit.point;
                 Vector2 pixels = hit.textureCoord;
 
@@ -53,7 +53,7 @@ public class DustCleaner : MonoBehaviour
 
                 Instantiate(dust, colPoint, Quaternion.identity);
                 ParticleSystem.MainModule p = dust.GetComponent<ParticleSystem>().main;
-                p.maxParticles = cleanedColorCount;
+                p.maxParticles = cleanedColorCount / 2;
 
                 tex.Apply();
                 material.SetTexture(textureName, tex);

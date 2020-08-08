@@ -857,6 +857,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2193d05e14df1aa47844545f1184caf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cleaner: {fileID: 729138132}
 --- !u!4 &680367171
 Transform:
   m_ObjectHideFlags: 0
@@ -1105,7 +1106,6 @@ MonoBehaviour:
   battery: 100
   costPerVacuum: 0.1
   originalTex: {fileID: 2800000, guid: 7cdc82f3fe6f67449be1f49b3c21a902, type: 3}
-  cloneTex: {fileID: 0}
 --- !u!4 &729138133
 Transform:
   m_ObjectHideFlags: 0
