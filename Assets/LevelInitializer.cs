@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MenuControl : MonoBehaviour
+public class LevelInitializer : MonoBehaviour
 {
+
     // Start is called before the first frame update
     void Start()
     {
@@ -14,15 +15,5 @@ public class MenuControl : MonoBehaviour
     void Update()
     {
         
-    }
-
-    public void SetScene(string scene)
-    {
-        SceneManager.LoadScene(scene);
-    }
-
-    public void ResetScene()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

@@ -16,6 +16,6 @@ public class Completion : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        GetComponent<Text>().text = ((cleaner.GetCleanedPixels() / manager.winThreshold) * 100).ToString("00") + "%";
+        GetComponent<Text>().text = ((cleaner.GetCleanedPixels() / manager.winThreshold) * 100).ToString(".##") + "%";
     }
 }

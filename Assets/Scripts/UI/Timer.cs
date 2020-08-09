@@ -16,7 +16,7 @@ public class Timer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        time = Time.realtimeSinceStartup;
+        time = Time.timeSinceLevelLoad;
         timerText.text = time.ToString("00.##").Replace(',',':');
     }
 }

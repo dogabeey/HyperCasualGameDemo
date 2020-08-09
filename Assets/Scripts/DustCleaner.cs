@@ -38,35 +38,26 @@ public class DustCleaner : MonoBehaviour
     void Update()
     {
         RaycastHit hit;
+        Vector2 delta0, delta1;
+        Touch touchZero;
+        Touch touchOne;
+
         if (Input.touches.Length == 1)
         {
+            touchZero = Input.GetTouch(0);
             ChangeBattery(-costPerVacuum);
-            Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
+            Ray ray = Camera.main.ScreenPointToRay(touchZero.position);
+
             if (Physics.Raycast(ray, out hit, 1000.0f, 1024))
             {
-                Vector3 colPoint = hit.point;
-                Vector2 pixels = hit.textureCoord;
-
-                pixels.x *= tex.width;
-                pixels.y *= tex.height;
-                int cleanedColorCount = AddPixelGroup(tex, (int)pixels.x, (int)pixels.y, new Color(-1.0f, -1.0f, -1.0f, 1.0f), brushSize);
-
-                Instantiate(dust, colPoint, Quaternion.identity);
-                ParticleSystem.MainModule p = dust.GetComponent<ParticleSystem>().main;
-                p.maxParticles = cleanedColorCount / 2;
-
-                tex.Apply();
-                material.SetTexture(textureName, tex);
-                originalTex = tex;
+                CleanDust(hit);
             }
         }
         if (Input.touches.Length == 2)
         {
-            Vector2 delta0, delta1;
-            Vector2 avgInput = ((delta0 = Input.GetTouch(0).deltaPosition) + (delta1 = Input.GetTouch(1).deltaPosition)) / 2;
-            Touch touchZero = Input.GetTouch(0);
-            Touch touchOne = Input.GetTouch(1);
-
+            touchZero = Input.GetTouch(0);
+            touchOne = Input.GetTouch(1);
+            Vector2 avgInput = ((delta0 = touchZero.deltaPosition) + (delta1 = touchOne.deltaPosition)) / 2;
             // Find the position in the previous frame of each touch.
             Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
             Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
@@ -87,6 +78,28 @@ public class DustCleaner : MonoBehaviour
         }
     }
 
+    private void CleanDust(RaycastHit hit)
+    {
+        Vector3 colPoint = hit.point;
+        Vector2 pixels = hit.textureCoord;
+
+        pixels.x *= tex.width;
+        pixels.y *= tex.height;
+        int cleanedColorCount = AddPixelGroup(tex, (int)pixels.x, (int)pixels.y, new Color(-1.0f, -1.0f, -1.0f, 1.0f), brushSize);
+        CreateDust(colPoint, cleanedColorCount);
+
+        tex.Apply();
+        material.SetTexture(textureName, tex);
+        originalTex = tex;
+    }
+
+    private void CreateDust(Vector3 colPoint, int cleanedColorCount)
+    {
+        Instantiate(dust, colPoint, Quaternion.identity);
+        ParticleSystem.MainModule p = dust.GetComponent<ParticleSystem>().main;
+        p.maxParticles = cleanedColorCount / 2;
+    }
+
     private void ChangeBattery(float amount)
     {
         battery = battery + amount;
@@ -100,6 +113,7 @@ public class DustCleaner : MonoBehaviour
             for (int j = y - brushSize; j < y + brushSize; j++)
             {
                 Color c;
+                
                 c = texture.GetPixel(i, j);
                 if (c.a != 0.0f)
                 {

@@ -1,18 +1,33 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    public DustCleaner dustCleaner;
-    public int winThreshold = 100000;
-    Texture2D dustTexture;
+    public static List<LevelManager> levels = new List<LevelManager>();
+    public EndGamePanel endGamePanel;
 
+    DustCleaner dustCleaner;
+    public int winThreshold = 100000;
+    public int twoStarsThresholdTime = 200;
+    public int threeStarsThresholdTime = 50;
+    Texture2D dustTexture;
+    Timer timer;
+
+    public float FinishTime { get; set; }
+    public float CurrentFinishTime { get; set; }
     
     // Start is called before the first frame update
     void Start()
     {
+        PlayerPrefs.SetFloat(SceneManager.GetActiveScene().name + "_twoStarsThresholdTime", twoStarsThresholdTime);
+        PlayerPrefs.SetFloat(SceneManager.GetActiveScene().name + "_threeStarsThresholdTime", threeStarsThresholdTime);
+        FinishTime = float.PositiveInfinity;
+        dustCleaner = FindObjectOfType<DustCleaner>();
         dustTexture = (Texture2D) dustCleaner.dustyObject.GetComponent<Renderer>().material.GetTexture(dustCleaner.textureName);
+        timer = FindObjectOfType<Timer>();
     }
 
     // Update is called once per frame
@@ -24,10 +39,17 @@ public class LevelManager : MonoBehaviour
 
     void WonLevel()
     {
-        Debug.Log("YOU WIN");
+        endGamePanel.gameObject.SetActive(true);
+        CurrentFinishTime = timer.time;
+        if (CurrentFinishTime < FinishTime ) FinishTime = CurrentFinishTime;
+        PlayerPrefs.SetFloat(SceneManager.GetActiveScene().name + "_FinishTime", FinishTime);
+
+        endGamePanel.WinMessage();
+        
     }
     void LostLevel()
     {
-        Debug.Log("YOU LOST");
+        endGamePanel.gameObject.SetActive(true);
+        endGamePanel.LoseMessage();
     }
 }
