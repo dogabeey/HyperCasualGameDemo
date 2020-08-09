@@ -22,6 +22,7 @@ public class LevelManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         PlayerPrefs.SetFloat(SceneManager.GetActiveScene().name + "_twoStarsThresholdTime", twoStarsThresholdTime);
         PlayerPrefs.SetFloat(SceneManager.GetActiveScene().name + "_threeStarsThresholdTime", threeStarsThresholdTime);
         FinishTime = float.PositiveInfinity;

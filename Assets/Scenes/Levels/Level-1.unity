@@ -706,7 +706,7 @@ GameObject:
   - component: {fileID: 369216235}
   - component: {fileID: 369216234}
   m_Layer: 0
-  m_Name: star1
+  m_Name: star2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -805,7 +805,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e60f53628df509444ad1a59e962675f1, type: 2}
+  - {fileID: 2100000, guid: 0456f27680841df41af9d0746f100c54, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1356,15 +1356,15 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1023232570}
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 680367170}
+        m_MethodName: SetScene
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Level-2
           m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
@@ -1437,7 +1437,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dustyObject: {fileID: 473195428}
-  brushSize: 37
+  brushSize: 30
   smoothness: 50
   textureName: _DetailAlbedoMap
   zoomSensitivity: 10
@@ -1844,7 +1844,7 @@ GameObject:
   - component: {fileID: 1022185182}
   - component: {fileID: 1022185181}
   m_Layer: 0
-  m_Name: star2
+  m_Name: star3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1925,7 +1925,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1023232571
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2006,9 +2006,9 @@ MonoBehaviour:
   menu: {fileID: 298821831}
   reset: {fileID: 1659682462}
   cont: {fileID: 713651105}
-  star1: {fileID: 369216234}
-  star2: {fileID: 1022185181}
-  star3: {fileID: 1820445639}
+  star1: {fileID: 1820445639}
+  star2: {fileID: 369216234}
+  star3: {fileID: 1022185181}
 --- !u!1 &1047332824
 GameObject:
   m_ObjectHideFlags: 0
@@ -2040,8 +2040,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   endGamePanel: {fileID: 1023232574}
   winThreshold: 500000
-  twoStarsThresholdTime: 200
-  threeStarsThresholdTime: 50
+  twoStarsThresholdTime: 30
+  threeStarsThresholdTime: 10
 --- !u!4 &1047332826
 Transform:
   m_ObjectHideFlags: 0
@@ -2351,7 +2351,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1659682463}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 680367170}
+        m_MethodName: ResetScene
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1659682463
@@ -2592,7 +2603,7 @@ GameObject:
   - component: {fileID: 1820445640}
   - component: {fileID: 1820445639}
   m_Layer: 0
-  m_Name: star3
+  m_Name: star1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

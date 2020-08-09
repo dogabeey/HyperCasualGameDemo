@@ -14,12 +14,15 @@ public class LevelScreen : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        int counter = 0;
         manager = FindObjectOfType<LevelManager>();
         timer = FindObjectOfType<Timer>();
         foreach (string level in levels)
         {
+            counter++;
             GameObject l = Instantiate(LevelButtonPrefab, FindObjectOfType<Canvas>().transform);
             l.GetComponent<Button>().onClick.AddListener(delegate { SceneManager.LoadScene(level); });
+            l.GetComponentInChildren<Text>().text = counter.ToString();
             
             if (PlayerPrefs.GetFloat(level + "_FinishTime") > 0) l.GetComponent<Image>().sprite = oneStar;
             if (PlayerPrefs.GetFloat(level + "_FinishTime") < PlayerPrefs.GetFloat(level + "_twoStarsThresholdTime")) l.GetComponent<Image>().sprite = twoStars;

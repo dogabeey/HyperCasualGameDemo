@@ -492,10 +492,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levels:
   - Level-1
-  - Level-1
-  - Level-1
-  - Level-1
-  - Level-1
+  - Level-2
+  - Level-3
+  - Level-4
+  - Level-5
   LevelButtonPrefab: {fileID: 8760513856788097179, guid: 0eadc70c21d6dee4b91c50e0ee444556,
     type: 3}
   noStar: {fileID: 8326005940052108394, guid: 7fbe2762080e59a4481f372a105d5b79, type: 3}
