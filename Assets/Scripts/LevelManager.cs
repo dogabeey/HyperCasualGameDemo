@@ -53,4 +53,10 @@ public class LevelManager : MonoBehaviour
         endGamePanel.gameObject.SetActive(true);
         endGamePanel.LoseMessage();
     }
+
+    void PauseGameplay()
+    {
+        dustCleaner.enabled = false;
+        timer.gameObject.SetActive(false);
+    }
 }

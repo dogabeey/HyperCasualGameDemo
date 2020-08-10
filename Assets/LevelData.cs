@@ -7,7 +7,7 @@ public class LevelData : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        PlayerPrefs.DeleteAll();
+        if(Application.platform == RuntimePlatform.WindowsEditor) PlayerPrefs.DeleteAll();
     }
 
     // Update is called once per frame
