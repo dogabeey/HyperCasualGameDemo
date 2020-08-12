@@ -5,12 +5,12 @@ using UnityEngine.UI;
 
 public class Completion : MonoBehaviour
 {
-    public DustCleaner cleaner;
+    DustCleaner cleaner;
     public LevelManager manager;
     // Start is called before the first frame update
     void Start()
     {
-        
+        cleaner = FindObjectOfType<DustCleaner>();
     }
 
     // Update is called once per frame

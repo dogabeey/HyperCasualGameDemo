@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
-
+[RequireComponent(typeof(ParticleSystem))]
 public class DustCleaner : MonoBehaviour
 {
     public GameObject dustyObject;
-    [Range(1,50)]public int brushSize = 40;
-    [Range(1,10)]public int smoothness = 1;
+    [Range(1, 20)] public int brushSize = 5;
     public string textureName;
     public float zoomSensitivity = 30;
     public GameObject dust;
@@ -20,62 +19,75 @@ public class DustCleaner : MonoBehaviour
     Vector2 prevTouchDiff = Vector2.zero;
     public Texture2D originalTex;
     float originalTexPixel;
+    Vector3 mouseDelta;
+
+    ParticleSystem particle;
+    public List<ParticleCollisionEvent> collisionEvents;
 
     int totalChangedPixels;
 
     // Start is called before the first frame update
     void Start()
     {
+        particle = GetComponent<ParticleSystem>();
+        collisionEvents = new List<ParticleCollisionEvent>();
         material = dustyObject.GetComponent<Renderer>().material;
-        originalTex = (Texture2D) material.GetTexture(textureName);
+        originalTex = (Texture2D)material.GetTexture(textureName);
         originalTexPixel = originalTex.GetPixels().Length;
         tex = new Texture2D(originalTex.width, originalTex.height, originalTex.format, false);
         tex.SetPixels(originalTex.GetPixels());
-
+        mouseDelta = Input.mousePosition;
     }
 
     // Update is called once per frame
     void Update()
     {
         RaycastHit hit;
-        Vector2 delta0, delta1;
-        Touch touchZero;
-        Touch touchOne;
+        Touch touch;
 
-        if (Input.touches.Length == 1)
+        if (Input.touchSupported)
         {
-            touchZero = Input.GetTouch(0);
-            ChangeBattery(-costPerVacuum);
-            Ray ray = Camera.main.ScreenPointToRay(touchZero.position);
-
-            if (Physics.Raycast(ray, out hit, 1000.0f, 1024))
+            if (Input.touches.Length == 1)
             {
-                CleanDust(hit);
+                touch = Input.GetTouch(0);
+                Ray ray = Camera.main.ScreenPointToRay(touch.position);
+
+                if (Physics.Raycast(ray, out hit, 1000.0f, 1024))
+                {
+                    CleanDust(hit);
+                    ChangeBattery(-costPerVacuum);
+                }
+                else
+                {
+                    Vector2 pos;
+                    pos = new Vector2(touch.deltaPosition.y, -touch.deltaPosition.x);
+                    dustyObject.transform.Rotate(pos, Space.World);
+                }
             }
         }
-        if (Input.touches.Length == 2)
+        else
         {
-            touchZero = Input.GetTouch(0);
-            touchOne = Input.GetTouch(1);
-            Vector2 avgInput = ((delta0 = touchZero.deltaPosition) + (delta1 = touchOne.deltaPosition)) / 2;
-            // Find the position in the previous frame of each touch.
-            Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
-            Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
-
-            // Find the magnitude of the vector (the distance) between the touches in each frame.
-            float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
-            float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
-
-            // Find the difference in the distances between each frame.
-            float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
-
-            if (deltaMagnitudeDiff > 2 || deltaMagnitudeDiff < -2) Camera.main.fieldOfView += (deltaMagnitudeDiff / zoomSensitivity);
-            else
+            if (Input.GetMouseButton(0))
             {
-                avgInput = new Vector2(avgInput.y, -avgInput.x);
-                dustyObject.transform.Rotate(avgInput, Space.World);
+                mouseDelta = Input.mousePosition - mouseDelta;
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                if (Physics.Raycast(ray, out hit, 1000.0f, 1024))
+                {
+                    CleanDust(hit);
+                    ChangeBattery(-costPerVacuum);
+                }
+                else
+                {
+                    Vector2 pos;
+                    pos = new Vector2(mouseDelta.y, -mouseDelta.x);
+                    dustyObject.transform.Rotate(pos, Space.World);
+                }
+
+                mouseDelta = Input.mousePosition;
             }
         }
+
     }
 
     private void CleanDust(RaycastHit hit)
@@ -95,9 +107,7 @@ public class DustCleaner : MonoBehaviour
 
     private void CreateDust(Vector3 colPoint, int cleanedColorCount)
     {
-        Instantiate(dust, colPoint, Quaternion.identity);
-        ParticleSystem.MainModule p = dust.GetComponent<ParticleSystem>().main;
-        p.maxParticles = cleanedColorCount / 2;
+
     }
 
     private void ChangeBattery(float amount)
@@ -108,20 +118,20 @@ public class DustCleaner : MonoBehaviour
     int AddPixelGroup(Texture2D texture, int x, int y, Color color, int brushSize)
     {
         int changedPixels = 0;
-        for(int i = x - brushSize; i < x + brushSize;i++)
+        for (int i = x - brushSize; i < x + brushSize; i++)
         {
             for (int j = y - brushSize; j < y + brushSize; j++)
             {
                 Color c;
-                
+
                 c = texture.GetPixel(i, j);
                 if (c.a != 0.0f)
                 {
                     changedPixels++;
                     totalChangedPixels++;
                 }
-                if (Mathf.Pow(x-i,2)+ Mathf.Pow(y - j, 2) < Mathf.Pow(brushSize, 2))
-                texture.SetPixel(i, j, c - color);
+                if (Mathf.Pow(x - i, 2) + Mathf.Pow(y - j, 2) < Mathf.Pow(brushSize, 2))
+                    texture.SetPixel(i, j, c - color);
             }
         }
         return changedPixels;
@@ -138,5 +148,28 @@ public class DustCleaner : MonoBehaviour
     public float GetCleanedPixels()
     {
         return totalChangedPixels;
+    }
+
+    private void OnParticleCollision(GameObject other)
+    {
+        ParticleSystem.MainModule main = particle.main;
+        int numCollisionEvents = particle.GetCollisionEvents(other, collisionEvents);
+        int i = 0;
+
+        while (i < numCollisionEvents)
+        {
+            Vector3 pos = collisionEvents[i].intersection;
+            Ray ray = new Ray(transform.position, pos - transform.position);
+            Debug.Log("A ray is traveling from " + transform.position + " to " + pos);
+            Debug.DrawRay(transform.position, pos - transform.position);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 1000.0f, 1024))
+            {
+                CleanDust(hit);
+                ChangeBattery(-costPerVacuum);
+                Debug.Log("Raycast");
+            }
+            i++;
+        }
     }
 }
