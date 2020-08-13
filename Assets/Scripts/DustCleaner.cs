@@ -54,8 +54,8 @@ public class DustCleaner : MonoBehaviour
 
                 if (Physics.Raycast(ray, out hit, 1000.0f, 1024))
                 {
-                    CleanDust(hit);
-                    ChangeBattery(-costPerVacuum);
+                    transform.LookAt(hit.point);
+                    if (!particle.isPlaying) particle.Play();
                 }
                 else
                 {
@@ -63,6 +63,10 @@ public class DustCleaner : MonoBehaviour
                     pos = new Vector2(touch.deltaPosition.y, -touch.deltaPosition.x);
                     dustyObject.transform.Rotate(pos, Space.World);
                 }
+            }
+            else
+            {
+                if (particle.isPlaying) particle.Stop();
             }
         }
         else
@@ -72,19 +76,12 @@ public class DustCleaner : MonoBehaviour
                 mouseDelta = Input.mousePosition - mouseDelta;
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-                if (Physics.Raycast(ray, out hit, 1000.0f, 1024))
-                {
-                    CleanDust(hit);
-                    ChangeBattery(-costPerVacuum);
-                }
-                else
-                {
-                    Vector2 pos;
-                    pos = new Vector2(mouseDelta.y, -mouseDelta.x);
-                    dustyObject.transform.Rotate(pos, Space.World);
-                }
-
-                mouseDelta = Input.mousePosition;
+                transform.LookAt(ray.direction);
+                if (!particle.isPlaying) particle.Play();
+            }
+            else
+            {
+                if (particle.isPlaying) particle.Stop();
             }
         }
 
