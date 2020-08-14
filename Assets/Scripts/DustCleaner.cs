@@ -45,24 +45,15 @@ public class DustCleaner : MonoBehaviour
         RaycastHit hit;
         Touch touch;
 
-        if (Input.touchSupported)
+        if (Input.touches.Length > 0)
         {
-            if (Input.touches.Length == 1)
+            touch = Input.GetTouch(0);
+            mouseDelta = Input.mousePosition - mouseDelta;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit, 1000, 768))
             {
-                touch = Input.GetTouch(0);
-                Ray ray = Camera.main.ScreenPointToRay(touch.position);
-
-                if (Physics.Raycast(ray, out hit, 1000.0f, 1024))
-                {
-                    transform.LookAt(hit.point);
-                    if (!particle.isPlaying) particle.Play();
-                }
-                else
-                {
-                    Vector2 pos;
-                    pos = new Vector2(touch.deltaPosition.y, -touch.deltaPosition.x);
-                    dustyObject.transform.Rotate(pos, Space.World);
-                }
+                transform.LookAt(hit.point);
+                if (!particle.isPlaying) particle.Play();
             }
             else
             {
@@ -71,18 +62,7 @@ public class DustCleaner : MonoBehaviour
         }
         else
         {
-            if (Input.GetMouseButton(0))
-            {
-                mouseDelta = Input.mousePosition - mouseDelta;
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-                transform.LookAt(ray.direction);
-                if (!particle.isPlaying) particle.Play();
-            }
-            else
-            {
-                if (particle.isPlaying) particle.Stop();
-            }
+            if (particle.isPlaying) particle.Stop();
         }
 
     }
@@ -157,14 +137,12 @@ public class DustCleaner : MonoBehaviour
         {
             Vector3 pos = collisionEvents[i].intersection;
             Ray ray = new Ray(transform.position, pos - transform.position);
-            Debug.Log("A ray is traveling from " + transform.position + " to " + pos);
             Debug.DrawRay(transform.position, pos - transform.position);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 1000.0f, 1024))
+            if (Physics.Raycast(ray, out hit, 1000.0f, 256) && other == dustyObject)
             {
                 CleanDust(hit);
                 ChangeBattery(-costPerVacuum);
-                Debug.Log("Raycast");
             }
             i++;
         }
