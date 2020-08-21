@@ -10,15 +10,13 @@ public class EndGamePanel : MonoBehaviour
     public Text endMessage;
     public Button menu, reset, cont;
     public Image star1, star2, star3;
-
-    LevelManager manager;
+    
     Timer timer;
     Color starColor = Color.yellow;
 
     // Start is called before the first frame update
     void Start()
     {
-        manager = FindObjectOfType<LevelManager>();
         timer = FindObjectOfType<Timer>();
     }
 
@@ -28,12 +26,20 @@ public class EndGamePanel : MonoBehaviour
         
     }
 
-    public void WinMessage()
+    public void WinMessage(int twoST, int threeST)
     {
+        string levelName = SceneManager.GetActiveScene().name;
+        string[] levelNames = levelName.Split('-');
+        int currentLevel = Convert.ToInt32(levelNames[1]);
+        currentLevel++;
+        cont.onClick.AddListener(delegate { SceneManager.LoadScene(levelNames[0] + "-" + currentLevel.ToString()); });
+        Debug.Log(levelNames[0] + currentLevel.ToString());
+
         endMessage.text = "Nice Work!";
         star1.color = starColor;
-        if (timer.time < manager.twoStarsThresholdTime) star2.color = starColor;
-        if (timer.time < manager.threeStarsThresholdTime) star3.color = starColor;
+        if (PlayerPrefs.GetFloat(levelName + "_FinishTime") < twoST) star2.color = starColor;
+        if (PlayerPrefs.GetFloat(levelName + "_FinishTime") < threeST) star3.color = starColor;
+
     }
 
     public void LoseMessage()

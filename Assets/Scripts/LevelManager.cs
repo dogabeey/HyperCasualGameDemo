@@ -15,10 +15,13 @@ public class LevelManager : MonoBehaviour
     public int winThreshold = 100000;
     public int twoStarsThresholdTime = 200;
     public int threeStarsThresholdTime = 50;
+    public float waitBeforeEndScreen = 3;
+    public ParticleSystem confetti;
 
     Texture2D dustTexture;
     Timer timer;
     PlayerStats stats;
+    bool isEnded = false;
 
     public float FinishTime { get; set; }
     public float CurrentFinishTime { get; set; }
@@ -33,7 +36,7 @@ public class LevelManager : MonoBehaviour
             { SceneManager.GetActiveScene().name + "_losses", stats.loses },
             { SceneManager.GetActiveScene().name + "_resets", stats.tries }
         });
-        Debug.Log(stats.tries);
+
         PlayerPrefs.SetFloat(SceneManager.GetActiveScene().name + "_twoStarsThresholdTime", twoStarsThresholdTime);
         PlayerPrefs.SetFloat(SceneManager.GetActiveScene().name + "_threeStarsThresholdTime", threeStarsThresholdTime);
         FinishTime = float.PositiveInfinity;
@@ -45,29 +48,56 @@ public class LevelManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (dustCleaner.GetCleanedPixels() > winThreshold ) WonLevel();
-        if (dustCleaner.battery < 0.01f) LostLevel();
+        if (dustCleaner.GetCleanedPixels() > winThreshold && !isEnded ) StartCoroutine(WonLevel());
+        if (dustCleaner.battery < 0.01f && !isEnded) StartCoroutine(LostLevel());
     }
 
-    void WonLevel()
+    IEnumerator WonLevel()
     {
+        isEnded = true;
         stats.wins++;
+        dustCleaner.dustyObject.GetComponent<Renderer>().material.SetTexture(dustCleaner.textureName, null);
+        dustCleaner.gameObject.SetActive(false);
+
+        StartCoroutine(PopConfetti());
+        yield return new WaitForSeconds(waitBeforeEndScreen);
 
         endGamePanel.gameObject.SetActive(true);
         CurrentFinishTime = timer.time;
         if (CurrentFinishTime < FinishTime) FinishTime = CurrentFinishTime;
         PlayerPrefs.SetFloat(SceneManager.GetActiveScene().name + "_FinishTime", FinishTime);
 
-        endGamePanel.WinMessage();
+        endGamePanel.WinMessage(twoStarsThresholdTime,threeStarsThresholdTime);
+
+        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("in-game"))
+        {
+            obj.SetActive(false);
+        }
 
     }
 
-    void LostLevel()
+    IEnumerator PopConfetti()
     {
+        ParticleSystem c = Instantiate(confetti);
+        ParticleSystem.MainModule main = c.main;
+        main.duration = waitBeforeEndScreen;
+        c.Play();
+        yield return new WaitForSeconds(0);
+    }
+
+    IEnumerator LostLevel()
+    {
+        isEnded = true;
         stats.loses++;
+        dustCleaner.gameObject.SetActive(false);
+        yield return new WaitForSeconds(2.5f);
 
         endGamePanel.gameObject.SetActive(true);
         endGamePanel.LoseMessage();
+        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("in-game"))
+        {
+            obj.SetActive(false);
+        }
     }
 
     private void Reset()

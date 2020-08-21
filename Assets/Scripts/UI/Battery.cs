@@ -15,7 +15,6 @@ public class Battery : MonoBehaviour
         cleaner = FindObjectOfType<DustCleaner>();
         maxCharge = cleaner.battery;
         batteryIndicator = GetComponentsInChildren<Image>()[2];
-        batteryText = GetComponentInChildren<Text>();
     }
 
     // Update is called once per frame
@@ -23,7 +22,5 @@ public class Battery : MonoBehaviour
     {
         batteryIndicator.fillAmount = cleaner.battery / maxCharge;
         batteryIndicator.color = new Color(1- batteryIndicator.fillAmount, batteryIndicator.fillAmount, batteryIndicator.color.b);
-
-        batteryText.text = (batteryIndicator.fillAmount * 100).ToString("00") + "%";
     }
 }

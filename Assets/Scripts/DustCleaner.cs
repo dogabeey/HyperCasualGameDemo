@@ -7,7 +7,7 @@ using UnityEditor;
 public class DustCleaner : MonoBehaviour
 {
     public GameObject dustyObject;
-    [Range(1, 20)] public int brushSize = 5;
+    [Range(1, 40)] public int brushSize = 20;
     public string textureName;
     public float zoomSensitivity = 30;
     public GameObject dust;

@@ -8,7 +8,7 @@ public class LevelScreen : MonoBehaviour
 {
     public List<string> levels = new List<string>();
     public GameObject LevelButtonPrefab; 
-    public Sprite noStar,oneStar,twoStars,threeStars;
+    public Image noStar,oneStar,twoStars,threeStars;
     LevelManager manager;
     Timer timer;
     // Start is called before the first frame update
@@ -20,14 +20,14 @@ public class LevelScreen : MonoBehaviour
         foreach (string level in levels)
         {
             counter++;
-            GameObject l = Instantiate(LevelButtonPrefab, FindObjectOfType<Canvas>().transform);
+            GameObject l = Instantiate(LevelButtonPrefab, GameObject.FindGameObjectWithTag("panel").transform);
             l.GetComponent<Button>().onClick.AddListener(delegate { SceneManager.LoadScene(level); });
             l.GetComponentInChildren<Text>().text = counter.ToString();
-            
-            if (PlayerPrefs.GetFloat(level + "_FinishTime") > 0) l.GetComponent<Image>().sprite = oneStar;
-            if (PlayerPrefs.GetFloat(level + "_FinishTime") < PlayerPrefs.GetFloat(level + "_twoStarsThresholdTime")) l.GetComponent<Image>().sprite = twoStars;
-            if (PlayerPrefs.GetFloat(level + "_FinishTime") < PlayerPrefs.GetFloat(level + "_threeStarsThresholdTime")) l.GetComponent<Image>().sprite = threeStars;
-            
+
+            if (PlayerPrefs.GetFloat(level + "_FinishTime") > 0) { l.GetComponentsInChildren<Image>()[0].color = Color.yellow; l.GetComponentsInChildren<Text>()[1].text = PlayerPrefs.GetFloat(level + "_FinishTime").ToString("00.##").Replace(',', ':'); }
+            if (PlayerPrefs.GetFloat(level + "_FinishTime") < PlayerPrefs.GetFloat(level + "_twoStarsThresholdTime")) { l.GetComponentsInChildren<Image>()[1].color = Color.yellow;  }
+            if (PlayerPrefs.GetFloat(level + "_FinishTime") < PlayerPrefs.GetFloat(level + "_threeStarsThresholdTime")) { l.GetComponentsInChildren<Image>()[2].color = Color.yellow; }
+
         }
     }
 

@@ -78,7 +78,7 @@ Material:
     - _EmissionEnabled: 0
     - _FlipbookMode: 0
     - _GlossMapScale: 1
-    - _Glossiness: 0.92
+    - _Glossiness: 0.79
     - _GlossyReflections: 1
     - _LightingEnabled: 0
     - _Metallic: 0.2
@@ -99,4 +99,4 @@ Material:
     - _ColorAddSubDiff: {r: 1, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SoftParticleFadeParams: {r: 0, g: 0, b: 0, a: 0}
-    - _SpecColor: {r: 0, g: 0, b: 0, a: 1}
+    - _SpecColor: {r: 0.18867922, g: 0.18867922, b: 0.18867922, a: 1}
