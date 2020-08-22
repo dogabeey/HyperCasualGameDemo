@@ -33,7 +33,6 @@ public class EndGamePanel : MonoBehaviour
         int currentLevel = Convert.ToInt32(levelNames[1]);
         currentLevel++;
         cont.onClick.AddListener(delegate { SceneManager.LoadScene(levelNames[0] + "-" + currentLevel.ToString()); });
-        Debug.Log(levelNames[0] + currentLevel.ToString());
 
         endMessage.text = "Nice Work!";
         star1.color = starColor;

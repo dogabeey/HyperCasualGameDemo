@@ -149,14 +149,14 @@ RectTransform:
   m_GameObject: {fileID: 1217687425322405844}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.64666, y: 0.64666, z: 0.64666}
+  m_LocalScale: {x: 0.5104475, y: 0.5104475, z: 0.5104475}
   m_Children: []
   m_Father: {fileID: 1217687426016857863}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -17.9}
+  m_AnchoredPosition: {x: 0, y: -17.545}
   m_SizeDelta: {x: 289.4, y: 289.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1217687425322405847
@@ -224,14 +224,14 @@ RectTransform:
   m_GameObject: {fileID: 1217687426015808487}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.64666, y: 0.64666, z: 0.64666}
+  m_LocalScale: {x: 0.5104475, y: 0.5104475, z: 0.5104475}
   m_Children: []
   m_Father: {fileID: 1217687426016857863}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -255.7, y: -3.6}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 220, y: -6.2572}
   m_SizeDelta: {x: 255.4, y: 255.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1217687426015808482
@@ -479,15 +479,15 @@ RectTransform:
   m_GameObject: {fileID: 1217687427360837369}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.64666, y: 0.64666, z: 0.64666}
+  m_LocalScale: {x: 0.5104475, y: 0.5104475, z: 0.5104475}
   m_Children: []
   m_Father: {fileID: 1217687426016857863}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 255.7, y: -3.6}
-  m_SizeDelta: {x: 255.4, y: 255.4}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -220, y: -6.2572}
+  m_SizeDelta: {x: 255.40002, y: 255.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1217687427360837364
 CanvasRenderer:
@@ -1075,7 +1075,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4845827119987673293}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2193138886685545790}
+        m_MethodName: SetScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Level Menu
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!1 &8006973395957198692

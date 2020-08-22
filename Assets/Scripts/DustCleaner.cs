@@ -54,6 +54,8 @@ public class DustCleaner : MonoBehaviour
             {
                 transform.LookAt(hit.point);
                 if (!particle.isPlaying) particle.Play();
+
+                ChangeBattery(-costPerVacuum);
             }
             else
             {
@@ -142,7 +144,6 @@ public class DustCleaner : MonoBehaviour
             if (Physics.Raycast(ray, out hit, 1000.0f, 256) && other == dustyObject)
             {
                 CleanDust(hit);
-                ChangeBattery(-costPerVacuum);
             }
             i++;
         }

@@ -755,6 +755,11 @@ PrefabInstance:
       propertyPath: brushSize
       value: 18
       objectReference: {fileID: 0}
+    - target: {fileID: 1268527751015174319, guid: 7d3f68c7d2ae0364f89a0bbc9ae36125,
+        type: 3}
+      propertyPath: costPerVacuum
+      value: 0.07
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7d3f68c7d2ae0364f89a0bbc9ae36125, type: 3}
 --- !u!1001 &4654459248161028040
@@ -968,17 +973,12 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 963194227}
-    - target: {fileID: 8042500988744399300, guid: a147d3b4dab19a84b8aaba6ad826e8cd,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 680367170}
-    - target: {fileID: 7630761038320422100, guid: a147d3b4dab19a84b8aaba6ad826e8cd,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 680367170}
     - target: {fileID: 8042500987755232490, guid: a147d3b4dab19a84b8aaba6ad826e8cd,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 680367170}
+    - target: {fileID: 8042500988744399300, guid: a147d3b4dab19a84b8aaba6ad826e8cd,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -988,6 +988,11 @@ PrefabInstance:
       propertyPath: manager
       value: 
       objectReference: {fileID: 1047332825}
+    - target: {fileID: 7630761038320422100, guid: a147d3b4dab19a84b8aaba6ad826e8cd,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 680367170}
     - target: {fileID: 8042500989455189153, guid: a147d3b4dab19a84b8aaba6ad826e8cd,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target

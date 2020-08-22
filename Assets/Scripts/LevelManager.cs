@@ -54,6 +54,7 @@ public class LevelManager : MonoBehaviour
 
     IEnumerator WonLevel()
     {
+        Debug.Log("Level is won");
         isEnded = true;
         stats.wins++;
         dustCleaner.dustyObject.GetComponent<Renderer>().material.SetTexture(dustCleaner.textureName, null);
@@ -87,6 +88,7 @@ public class LevelManager : MonoBehaviour
 
     IEnumerator LostLevel()
     {
+        Debug.Log("Level is lost");
         isEnded = true;
         stats.loses++;
         dustCleaner.gameObject.SetActive(false);

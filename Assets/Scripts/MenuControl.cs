@@ -8,7 +8,6 @@ public class MenuControl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (Application.platform == RuntimePlatform.WindowsEditor) PlayerPrefs.DeleteAll();
     }
 
     // Update is called once per frame

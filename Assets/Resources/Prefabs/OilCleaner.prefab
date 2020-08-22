@@ -4772,5 +4772,5 @@ MonoBehaviour:
   zoomSensitivity: 30
   dust: {fileID: 0}
   battery: 100
-  costPerVacuum: 0.08
+  costPerVacuum: 0.07
   originalTex: {fileID: 2800000, guid: 22a7f83ab960c99498337994d1848b39, type: 3}
